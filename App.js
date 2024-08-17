@@ -14,8 +14,9 @@ import {
   Inter_400Regular,
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
+import { useState } from "react";
 
-const RoleView = ({ label, view }) => {
+const RowView = ({ label, value }) => {
   return (
     <View
       style={{
@@ -38,6 +39,7 @@ const RoleView = ({ label, view }) => {
           {label}
         </Text>
       </View>
+
       <View>
         <Text
           style={{
@@ -52,8 +54,9 @@ const RoleView = ({ label, view }) => {
     </View>
   );
 };
-
 export default function App() {
+  const [showMore, setShowMore] = useState(false);
+
   let [fontsLoaded] = useFonts({
     inter_Regular: Inter_400Regular,
     inter_Bold: Inter_700Bold,
@@ -76,32 +79,34 @@ export default function App() {
         }}
       >
         {/* top portion*/}
-        <View style={{ flexDirection: "row" }}>
-          <View>
-            <Text
-              style={{
-                fontFamily: "inter_Regular",
-                fontSize: 12,
-                color: "#FFFFFF",
-              }}
-            >
-              “The science of operations, as derived from mathematics more
-              especially, is a science of itself, and has its own abstract truth
-              and value.”
-            </Text>
-            <Text
-              style={{
-                fontFamily: "inter_Bold",
-                color: "#FFFFFF",
-                fontSize: 12,
-                marginTop: 8,
-              }}
-            >
-              - Ada Lovelace
-            </Text>
+        {!showMore && (
+          <View style={{ flexDirection: "row" }}>
+            <View>
+              <Text
+                style={{
+                  fontFamily: "inter_Regular",
+                  fontSize: 12,
+                  color: "#FFFFFF",
+                }}
+              >
+                “The science of operations, as derived from mathematics more
+                especially, is a science of itself, and has its own abstract
+                truth and value.”
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "inter_Bold",
+                  color: "#FFFFFF",
+                  fontSize: 12,
+                  marginTop: 8,
+                }}
+              >
+                - Ada Lovelace
+              </Text>
+            </View>
+            <Image source={require("./assets/refresh.png")} />
           </View>
-          <Image source={require("./assets/refresh.png")} />
-        </View>
+        )}
         {/* BOTTOM PORTION */}
 
         <View>
@@ -157,7 +162,7 @@ export default function App() {
 
           {/* BUTTON */}
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => {setShowMore(!showMore)}}
             style={{
               flexDirection: "row",
               height: 40,
@@ -179,14 +184,16 @@ export default function App() {
                 letterSpacing: 3,
               }}
             >
-              MORE
+            {showMore?"LESS":"MORE"}  
             </Text>
-            <Image source={require("./assets/arrow-down.png")} />
+            <Image source={showMore?require("./assets/arrow-up.png"):require("./assets/arrow-down.png")} />
           </TouchableOpacity>
         </View>
       </View>
       {/* EXPANDED View */}
-      <View
+     {
+      showMore &&(
+        <View
         style={{
           backgroundColor: "#fff",
           opacity: 0.8,
@@ -194,9 +201,13 @@ export default function App() {
           paddingHorizontal: 26,
         }}
       >
-
-        <RoleView label={"Current Timezone"} value="Europe/London"/>
+        <RowView label={"Current Timezone"} value="Europe/London" />
+        <RowView label={"Day of the year"} value="295" />
+        <RowView label={"Day of the week"} value="5" />
+        <RowView label={"Week number"} value="42" />
       </View>
+      )
+     }
     </ImageBackground>
   );
 }
